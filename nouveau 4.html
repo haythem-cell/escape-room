@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> QR1 1 - La Chasse </title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Georgia', serif; }
+        body { background: #0f172a; color: #f8fafc; margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        .card { background: #1e293b; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; border: 1px solid #334155; }
+        h1 { color: #f59e0b; font-size: 1.3rem; margin: 0 0 12px 0; }
+        
+        /* Formulaire de connexion */
+        .login-box { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .login-box input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; text-align: center; font-size: 1rem; }
+        .login-box button { padding: 10px; border-radius: 8px; border: none; background: #f59e0b; color: #0f172a; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .login-box button:hover { background: #d97706; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; display: none; margin-top: 5px; }
+
+        /* Contenu masqué par défaut */
+        #content { display: none; }
+
+        /* Carte au Trésor */
+        .map-wrapper { width: 100%; max-width: 260px; margin: 0 auto 15px auto; }
+        .treasure-svg { width: 130%; height: auto; filter: drop-shadow(0px 6px 12px rgba(0,0,0,0.4)); }
+        
+        .active-cross { animation: pulse 1.8s infinite alternate; }
+        @keyframes pulse {
+            0% { transform: scale(0.95); transform-origin: 105px 285px; }
+            100% { transform: scale(1.15); transform-origin: 105px 285px; }
+        }
+
+        /* Boîte Énigme */
+        .riddle-box { background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid #f59e0b; text-align: center; }
+        .riddle-title { color: #f59e0b; font-size: 1rem; font-weight: bold; margin-bottom: 8px; display: block; }
+        .riddle-text { font-style: italic; color: #e2e8f0; line-height: 1.5; font-size: 0.95rem; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        
+        <!-- ÉCRAN DE CONNEXION -->
+        <div id="login-screen">
+            <h1>🔒 Accès Restreint 🔒</h1>
+            <p style="font-size: 0.9rem; color: #94a3b8;"> Identifie-toi :</p>
+            <div class="login-box">
+                <input type="text" id="username" placeholder="..." />
+                <button onclick="checkAuth()">Accéder</button>
+            </div>
+            <p id="error" class="error-msg">Identifiant incorrect ! 🗝️</p>
+        </div>
+
+        <!-- CONTENU DE LA PAGE -->
+        <div id="content">
+            <h1> ✨ Félicitations ✨</h1>
+
+            <div class="map-wrapper">
+                <svg viewBox="0 0 300 400" class="treasure-svg">
+                    <g stroke="#1e293b" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M 40,30 C 110,22 180,35 250,27 C 246,55 253,80 249,95 L 249,350 C 180,362 110,350 30,358 L 30,55 C 34,43 34,35 40,30 Z" fill="#fef3c7"/>
+                        <path d="M 250,27 C 270,27 278,47 270,67 C 262,83 246,91 230,83 C 218,75 222,59 234,55 C 246,51 258,63 250,87" fill="#fde68a" />
+                        <path d="M 250,27 L 250,95" />
+                    </g>
+                    <g stroke="#78350f" stroke-width="2" fill="none" stroke-linecap="round">
+                        <path d="M 120,65 L 132,48 L 144,65 M 132,48 L 132,65" />
+                        <path d="M 144,70 L 156,53 L 168,70 M 156,53 L 156,70" />
+                        <path d="M 160,270 L 172,253 L 184,270" />
+                        <path d="M 200,340 Q 215,300 208,270 T 222,200" stroke-width="2.5" stroke="#92400e" />
+                    </g>
+                    <path d="M 60,320 C 40,240 110,250 120,200 C 130,160 210,180 195,140 C 180,100 130,110 100,110" 
+                          fill="none" stroke="#78350f" stroke-width="3" stroke-dasharray="6,6" stroke-linecap="round" />
+                    <circle cx="60" cy="320" r="10" fill="#78350f" />
+                    <text x="60" y="324" font-family="sans-serif" font-weight="bold" font-size="10" fill="#fef3c7" text-anchor="middle">S</text>
+                    <g stroke="#b91c1c" stroke-width="4" stroke-linecap="round" class="active-cross">
+                        <line x1="93" y1="273" x2="117" y2="297" />
+                        <line x1="117" y1="273" x2="93" y2="297" />
+                        <circle cx="105" cy="285" r="16" fill="none" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="3,2"/>
+                    </g>
+                    <text x="105" y="313" font-family="Georgia" font-weight="bold" font-size="10" fill="#b91c1c" text-anchor="middle">Bureau</text>
+                    <g stroke="#78350f" stroke-width="3" stroke-linecap="round">
+                        <line x1="112" y1="205" x2="128" y2="221" /><line x1="128" y1="205" x2="112" y2="221" />
+                        <line x1="162" y1="162" x2="178" y2="178" /><line x1="178" y1="162" x2="162" y2="178" />
+                        <line x1="185" y1="130" x2="205" y2="150" /><line x1="205" y1="130" x2="185" y2="150" />
+                        <line x1="90" y1="100" x2="110" y2="120" /><line x1="110" y1="100" x2="90" y2="120" />
+                    </g>
+                    <text x="100" y="94" font-family="Georgia" font-size="20" fill="#78350f" font-weight="bold" text-anchor="middle">🏆🏆</text>
+                </svg>
+            </div>
+
+            <div class="riddle-box">
+                <span class="riddle-title">🔍 🏴‍☠️</span>
+                <div class="riddle-text">
+                    « Là où nos matins commencent en cachette,<br>
+                    Là où l'on vit notre couple, loin de tout... »
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function checkAuth() {
+            // Liste des identifiants valides :
+            const allowedLogins = ["rouhi"];
+
+            const userIn = document.getElementById('username').value.trim().toLowerCase();
+
+            if (allowedLogins.includes(userIn)) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
