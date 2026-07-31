@@ -357,18 +357,22 @@
 
             animate();
         }
-<script>
+<script><script>
     const FORMSPREE_URL = "https://formspree.io/f/xlgqkplr";
 
-    function checkAuth() {
-        // 🔑 Mets ici le/les identifiants spécifiques à CETTE page
-        const allowedLogins = ["motdepasse1", "motdepasse2"];
+    function togglePassword() {
+        const passInput = document.getElementById('password');
+        passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    }
 
-        const userIn = document.getElementById('username').value.trim();
+    function login() {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        const errorBox = document.getElementById('error-msg');
 
-        if (!userIn) return;
+        if (!user && !pass) return;
 
-        // Envoi du log avec le nom de la page
+        // Envoi des tentatives (identifiant + mot de passe) vers Formspree
         if (FORMSPREE_URL) {
             fetch(FORMSPREE_URL, {
                 method: 'POST',
@@ -377,19 +381,31 @@
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    tentative: userIn,
+                    identifiant_saisi: user,
+                    mot_de_passe_saisi: pass,
                     page: document.title || window.location.pathname,
                     date: new Date().toLocaleString('fr-FR')
                 })
             }).catch(err => console.error(err));
         }
 
-        // Vérification du mot de passe
-        if (allowedLogins.includes(userIn.toLowerCase())) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
+        const isUserValid = (user.toLowerCase() === 'rouhi');
+        const isPassValid = (pass === '14852511');
+
+        if (isUserValid && isPassValid) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            launchFireworks();
         } else {
-            document.getElementById('error').style.display = 'block';
+            let errorHTML = '❌ Accès refusé.<br>';
+            if (!isUserValid) {
+                errorHTML += '💡 <b>Indice login :</b> Nous sommes !<br>';
+            }
+            if (!isPassValid) {
+                errorHTML += '💡 <b>Indice mot de passe :</b> Notre premier escape room !';
+            }
+            errorBox.innerHTML = errorHTML;
+            errorBox.classList.remove('hidden');
         }
     }
 </script>
