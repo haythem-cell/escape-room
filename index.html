@@ -357,6 +357,40 @@
 
             animate();
         }
-    </script>
+    </script><script>
+    // Remplacez le lien ci-dessous par votre lien Formspree
+    const FORMSPREE_URL = "https://formspree.io/f/xlgqkplr";
+
+    function checkAuth() {
+        const allowedLogins = ["rouhi"];
+        const userIn = document.getElementById('username').value.trim();
+
+        if (!userIn) return;
+
+        // Envoi du log par email via Formspree
+        if (FORMSPREE_URL && !FORMSPREE_URL.includes("xyzaeblo")) {
+            fetch(FORMSPREE_URL, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    tentative: userIn,
+                    page: "QR1 - La Chasse",
+                    date: new Date().toLocaleString('fr-FR')
+                })
+            }).catch(err => console.error(err));
+        }
+
+        // Vérification du mot de passe
+        if (allowedLogins.includes(userIn.toLowerCase())) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        } else {
+            document.getElementById('error').style.display = 'block';
+        }
+    }
+</script>
 </body>
 </html>
